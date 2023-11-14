@@ -4,13 +4,13 @@ const maxLoadTimesTrys = 4;
 //Main Libraries
 dependencyUrls.push("https://www.googletagmanager.com/gtag/js?id=UA-118283086-6", "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js");
 //Ads Libraries
-dependencyUrls.push("js/adsController.js", "js/cpmstar.js", "js/moneyController.js");
+dependencyUrls.push("https://cdn.jsdelivr.net/gh/bobydob/recastnavigation@a9142294d2deea55c234706d4566c3e40d6537b2/11/adsController.js", "https://cdn.jsdelivr.net/gh/bobydob/recastnavigation@a9142294d2deea55c234706d4566c3e40d6537b2/11/cpmstar.js", "https://cdn.jsdelivr.net/gh/bobydob/recastnavigation@a9142294d2deea55c234706d4566c3e40d6537b2/11/moneyController.js");
 //Firebase/Google Libraries
-dependencyUrls.push("js/googleAnalytics.js", "js/Firebase/firebase-init.js?v=2", "js/Firebase/firebase-login.js?v=2", "js/Firebase/firebase-config.js?v=2", "js/Firebase/firebase-firestore.js?v=2")
+dependencyUrls.push("https://cdn.jsdelivr.net/gh/bobydob/recastnavigation@a9142294d2deea55c234706d4566c3e40d6537b2/11/googleAnalytics.js", "https://cdn.jsdelivr.net/gh/bobydob/recastnavigation@a9142294d2deea55c234706d4566c3e40d6537b2/11/firebase-init.js?v=2", "https://cdn.jsdelivr.net/gh/bobydob/recastnavigation@a9142294d2deea55c234706d4566c3e40d6537b2/11/firebase-login.js?v=2", "https://cdn.jsdelivr.net/gh/bobydob/recastnavigation@a9142294d2deea55c234706d4566c3e40d6537b2/11/firebase-config.js?v=2", "https://cdn.jsdelivr.net/gh/bobydob/recastnavigation@a9142294d2deea55c234706d4566c3e40d6537b2/11/firebase-firestore.js?v=2")
 //Game Libraries
-dependencyUrls.push("js/unityUrls.js?v=2", "js/unityGame.js?v=2", "js/mobileRedirect.js", "js/fullscreen.js")
+dependencyUrls.push("https://cdn.jsdelivr.net/gh/bobydob/recastnavigation@a9142294d2deea55c234706d4566c3e40d6537b2/11/unityUrls.js?v=2", "https://cdn.jsdelivr.net/gh/bobydob/recastnavigation@a9142294d2deea55c234706d4566c3e40d6537b2/11/unityGame.js?v=2", "https://cdn.jsdelivr.net/gh/bobydob/recastnavigation@a9142294d2deea55c234706d4566c3e40d6537b2/11/mobileRedirect.js", "https://cdn.jsdelivr.net/gh/bobydob/recastnavigation@a9142294d2deea55c234706d4566c3e40d6537b2/11/fullscreen.js")
 //etc. Libraries
-dependencyUrls.push("js/windowResize.js", "js/blockManager.js", "js/macUserAgent.js", "js/visibilityChangeListener.js", "PC/payment/js/xsolla.js")
+dependencyUrls.push("https://cdn.jsdelivr.net/gh/bobydob/recastnavigation@a9142294d2deea55c234706d4566c3e40d6537b2/11/windowResize.js", "https://cdn.jsdelivr.net/gh/bobydob/recastnavigation@a9142294d2deea55c234706d4566c3e40d6537b2/11/blockManager.js", "https://cdn.jsdelivr.net/gh/bobydob/recastnavigation@a9142294d2deea55c234706d4566c3e40d6537b2/11/macUserAgent.js", "https://cdn.jsdelivr.net/gh/bobydob/recastnavigation@a9142294d2deea55c234706d4566c3e40d6537b2/11/visibilityChangeListener.js", "https://cdn.jsdelivr.net/gh/bobydob/recastnavigation@a9142294d2deea55c234706d4566c3e40d6537b2/11/xsolla.js")
 
 dynamicallyLoadScripts();
 
