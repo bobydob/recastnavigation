@@ -1784,17 +1784,17 @@ var adxAds2 = false;
                                         if (url.match(urls) || window.location.search.indexOf("y8") > -1) {
                                             midrolltimer = 130000;
 											if (!window.__lastAdTime) window.__lastAdTime = Date.now();
+if (!window.__lastMidrollTime) window.__lastMidrollTime = 0;
 var now = Date.now();
-var timeSinceLastAd = now - window.__lastAdTime;
+var timeSinceLastMidroll = now - window.__lastMidrollTime;
 
-
-if (timeSinceLastAd < 30000) {
-    console.log("Too soon for next ad. Skipping.");
-    e.onResumeGame("Ad skipped (too soon)", "success");
+if (timeSinceLastMidroll < 30000) {
+    console.log("Skipping midroll (too soon)");
+    e.onResumeGame("Midroll skipped", "success");
     return;
 }
 
-window.__lastAdTime = now;
+window.__lastMidrollTime = now;
                                             t.advertisements ? void 0 !== e.adRequestTimer ? (new Date).valueOf() - e.adRequestTimer.valueOf() < midrolltimer ? ((0, u.dankLog)("SDK_SHOW_BANNER", "The advertisement was requested too soon after the previous advertisement was finished.", "warning"), e.onResumeGame("Just resume the game...", "success")) : ((0, u.dankLog)("SDK_SHOW_BANNER", "Requested the midroll advertisement.", "success"), e.adRequestTimer = new Date, e.videoAdInstance.requestAttempts = 0, e.videoAdInstance.requestAd().then(function(t) {
                                                 return e.videoAdInstance.loadAd(t)
                                             }).catch(function(t) {
