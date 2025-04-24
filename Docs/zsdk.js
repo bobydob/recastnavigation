@@ -1787,8 +1787,8 @@ var adxAds2 = false;
 var now = Date.now();
 var timeSinceLastAd = now - window.__lastAdTime;
 
-// 2 минуты между показами
-if (timeSinceLastAd < 120000) {
+
+if (timeSinceLastAd < 30000) {
     console.log("Too soon for next ad. Skipping.");
     e.onResumeGame("Ad skipped (too soon)", "success");
     return;
