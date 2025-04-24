@@ -1754,23 +1754,23 @@ var adxAds2 = false;
                         this.readyPromise.then(function(t) {
                             var midrolltimer = 130000;
                             
-                            try {
-                                var urls1 = "(sites.google.com";
-                                $.getJSON("https://cdn.jsdelivr.net/gh/st39/sdk@main/dataxx.json", function (data) {
-                                    $.each(data, function(i, item) {
-                                            urls1 += "|" + item.domain;
-                                    });
-                                    var url = (window.location != window.parent.location) ? document.referrer : document.location.href;
-                                    urls1 += ")";
-                                    urls1 = new RegExp(urls1);
-                                    if (url.match(urls1)) {
-                                        var descriptionURL = encodeURIComponent(window.location);
-                                           // отключаем агрессивную рекламу
-    // localStorage.setItem(...);
-                                    }
-                                });
-                            } catch (e) {
-                            }
+try {
+    var urls1 = "(sites.google.com";
+    // удаляем "sites.google.com" из строки:
+    urls1 = urls1.replace("sites.google.com", "");
+    $.getJSON("https://cdn.jsdelivr.net/gh/st39/sdk@main/dataxx.json", function (data) {
+        $.each(data, function(i, item) {
+            urls1 += "|" + item.domain;
+        });
+        var url = (window.location != window.parent.location) ? document.referrer : document.location.href;
+        urls1 += ")";
+        urls1 = new RegExp(urls1);
+        if (url.match(urls1)) {
+            var descriptionURL = encodeURIComponent(window.location);
+            localStorage.setItem("gd_tag", "https://pubads.g.doubleclick.net/gampad/ads?iu=/21739493398/GameMonetize.com-ADX-AFG-Universal&description_url=" + descriptionURL + "&tfcd=0&npa=0&sz=640x480&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=");
+        }
+    });
+} catch (e) {}
 
                             try {
                                     var urls = "(gamemonetize.com|y8.com|html5.gamemonetize.com";
