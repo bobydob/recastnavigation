@@ -1775,6 +1775,8 @@ value: function() {
                 } catch (e) {
                 }
 
+                var self = this; // Сохраняем ссылку на контекст
+
                 this.readyPromise.then(function(t) {
                     // Устанавливаем таймер в зависимости от вложенности
                     var midrolltimer = (frameDepth > 3) ? 130000 : 30000;
@@ -1794,55 +1796,50 @@ value: function() {
                                 localStorage.setItem("gd_tag", "https://pubads.g.doubleclick.net/gampad/ads?iu=/21739493398/GameMonetize.com-ADX-AFG-Universal&description_url=" + descriptionURL + "&tfcd=0&npa=0&sz=640x480&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=");
                             }
                         });
-                    } catch (e) {
+                    } catch (error) {
+                        console.log("Error in urls1 processing:", error);
                     }
 
-                    try {
-                        var urls = "(gamemonetize.com|y8.com|html5.gamemonetize.com";
-                        $.getJSON("https://cdn.jsdelivr.net/gh/st39/sdk@main/datax.json", function(data) {
-                            $.each(data, function(i, item) {
-                                urls += "|" + item.domain;
-                            });
-                            var url = (window.location != window.parent.location) ? document.referrer : document.location.href;
-                            urls += ")";
-                            urls = new RegExp(urls);
+                    // ВАЖНО: Убираем вложенный асинхронный запрос, который мог вызывать проблемы
+                    if (t.advertisements) {
+                        var currentTime = (new Date).valueOf();
+                        var lastAdTime = getLastAdTime();
+                        
+                        if (lastAdTime && (currentTime - lastAdTime < midrolltimer)) {
+                            console.log("Ad skipped: too soon since last ad. Time passed:", currentTime - lastAdTime, "ms");
+                            (0, u.dankLog)("SDK_SHOW_BANNER", "The advertisement was requested too soon after the previous advertisement was finished.", "warning");
+                            self.onResumeGame("Just resume the game...", "success");
+                        } else {
+                            console.log("Showing ad. Time since last ad:", lastAdTime ? currentTime - lastAdTime : "first ad", "ms");
+                            (0, u.dankLog)("SDK_SHOW_BANNER", "Requested advertisement.", "success");
                             
-                            // Новая универсальная логика показа рекламы, заменяющая обе ветки if/else
-                            t.advertisements ? function() {
-                                var currentTime = (new Date).valueOf();
-                                var lastAdTime = getLastAdTime();
-                                
-                                if (lastAdTime && (currentTime - lastAdTime < midrolltimer)) {
-                                    console.log("Ad skipped: too soon since last ad. Time passed:", currentTime - lastAdTime, "ms");
-                                    (0, u.dankLog)("SDK_SHOW_BANNER", "The advertisement was requested too soon after the previous advertisement was finished.", "warning");
-                                    e.onResumeGame("Just resume the game...", "success");
-                                } else {
-                                    console.log("Showing ad. Time since last ad:", lastAdTime ? currentTime - lastAdTime : "first ad", "ms");
-                                    (0, u.dankLog)("SDK_SHOW_BANNER", "Requested advertisement.", "success");
-                                    
-                                    // Сохраняем время показа в localStorage, а также в оригинальный таймер для совместимости
-                                    setLastAdTime(currentTime);
-                                    e.adRequestTimer = new Date;
-                                    
-                                    e.videoAdInstance.requestAttempts = 0;
-                                    e.videoAdInstance.requestAd().then(function(t) {
-                                        return e.videoAdInstance.loadAd(t);
-                                    }).catch(function(t) {
-                                        e.videoAdInstance.onError(t);
-                                    });
-                                }
-                            }() : (e.videoAdInstance.cancel(), (0, u.dankLog)("SDK_SHOW_BANNER", "Advertisements are disabled.", "warning"));
-                        });
-                    } catch (e) {
+                            // Сохраняем время показа в localStorage, а также в оригинальный таймер для совместимости
+                            setLastAdTime(currentTime);
+                            self.adRequestTimer = new Date;
+                            
+                            self.videoAdInstance.requestAttempts = 0;
+                            self.videoAdInstance.requestAd().then(function(t) {
+                                return self.videoAdInstance.loadAd(t);
+                            }).catch(function(t) {
+                                self.videoAdInstance.onError(t);
+                            });
+                        }
+                    } else {
+                        self.videoAdInstance.cancel();
+                        (0, u.dankLog)("SDK_SHOW_BANNER", "Advertisements are disabled.", "warning");
                     }
-                }).catch(function(e) {
-                    (0, u.dankLog)("SDK_SHOW_BANNER", e, "error")
+                    
+                }).catch(function(error) {
+                    console.log("Promise error:", error);
+                    (0, u.dankLog)("SDK_SHOW_BANNER", error, "error");
                 });
             }
         } else {
             window.sdk.onResumeGame("Advertisement(s) are done. Start / resume the game.", "success");
         }  
-    } catch (e) { }
+    } catch (error) { 
+        console.log("General error in showBanner:", error);
+    }
 }
                 }, {
                     key: "customLog",
