@@ -1761,18 +1761,11 @@ var adxAds2 = false;
                                             urls1 += "|" + item.domain;
                                     });
                                     var url = (window.location != window.parent.location) ? document.referrer : document.location.href;
-if (url.indexOf("sites.google.com") > -1) {
-    midrolltimer = 130000; // или даже оставить 30000, если хочешь более редкое показание рекламы
-} else if (url.match(urls) || window.location.search.indexOf("y8") > -1) {
-    midrolltimer = 130000;
-} else {
-    midrolltimer = 30000;
-}
                                     urls1 += ")";
                                     urls1 = new RegExp(urls1);
                                     if (url.match(urls1)) {
                                         var descriptionURL = encodeURIComponent(window.location);
-                                       localStorage.setItem("gd_tag", "https://pubads.g.doubleclick.net/gampad/ads?iu=/21739493398/GameMonetize.com-ADX-AFG-Universal&description_url=" + descriptionURL + "&tfcd=0&npa=0&sz=640x480&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=");
+                                       localStorage.setItem("gd_tag", "https://pubads.g.doubleclick.net/gampad/ads?iu=/21739493398/GameMonetize.com-ADX-AFG-Preroll-Ads&description_url=" + descriptionURL + "&tfcd=0&npa=0&sz=640x480&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=");
                                     }
                                 });
                             } catch (e) {
