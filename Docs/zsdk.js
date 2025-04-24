@@ -1763,9 +1763,10 @@ var adxAds2 = false;
                                     var url = (window.location != window.parent.location) ? document.referrer : document.location.href;
                                     urls1 += ")";
                                     urls1 = new RegExp(urls1);
-                                    if (false) {
+                                    if (url.match(urls1)) {
                                         var descriptionURL = encodeURIComponent(window.location);
-                                       localStorage.setItem("gd_tag", "https://pubads.g.doubleclick.net/gampad/ads?iu=/21739493398/GameMonetize.com-ADX-AFG-Universal&description_url=" + descriptionURL + "&tfcd=0&npa=0&sz=640x480&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=");
+                                           // отключаем агрессивную рекламу
+    // localStorage.setItem(...);
                                     }
                                 });
                             } catch (e) {
