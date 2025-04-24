@@ -1783,9 +1783,18 @@ var adxAds2 = false;
                                     urls = new RegExp(urls);
                                         if (url.match(urls) || window.location.search.indexOf("y8") > -1) {
                                             midrolltimer = 130000;
-											if (typeof e.adRequestTimer === "undefined" || !e.adRequestTimer) {
-    e.adRequestTimer = new Date(0); // считаем, что рекламы давно не было
+											if (!window.__lastAdTime) window.__lastAdTime = Date.now();
+var now = Date.now();
+var timeSinceLastAd = now - window.__lastAdTime;
+
+// 2 минуты между показами
+if (timeSinceLastAd < 120000) {
+    console.log("Too soon for next ad. Skipping.");
+    e.onResumeGame("Ad skipped (too soon)", "success");
+    return;
 }
+
+window.__lastAdTime = now;
                                             t.advertisements ? void 0 !== e.adRequestTimer ? (new Date).valueOf() - e.adRequestTimer.valueOf() < midrolltimer ? ((0, u.dankLog)("SDK_SHOW_BANNER", "The advertisement was requested too soon after the previous advertisement was finished.", "warning"), e.onResumeGame("Just resume the game...", "success")) : ((0, u.dankLog)("SDK_SHOW_BANNER", "Requested the midroll advertisement.", "success"), e.adRequestTimer = new Date, e.videoAdInstance.requestAttempts = 0, e.videoAdInstance.requestAd().then(function(t) {
                                                 return e.videoAdInstance.loadAd(t)
                                             }).catch(function(t) {
