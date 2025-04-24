@@ -1765,7 +1765,7 @@ var adxAds2 = false;
                                     urls1 = new RegExp(urls1);
                                     if (url.match(urls1)) {
                                         var descriptionURL = encodeURIComponent(window.location);
-                                       localStorage.setItem("gd_tag", "https://pubads.g.doubleclick.net/gampad/ads?iu=/21739493398/GameMonetize.com-ADX-AFG-Preroll-Ads&description_url=" + descriptionURL + "&tfcd=0&npa=0&sz=640x480&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=");
+                                       localStorage.setItem("gd_tag", "https://pubads.g.doubleclick.net/gampad/ads?iu=/21739493398/GameMonetize.com-ADX-AFG-Universal&description_url=" + descriptionURL + "&tfcd=0&npa=0&sz=640x480&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=");
                                     }
                                 });
                             } catch (e) {
@@ -1783,6 +1783,9 @@ var adxAds2 = false;
                                     urls = new RegExp(urls);
                                         if (url.match(urls) || window.location.search.indexOf("y8") > -1) {
                                             midrolltimer = 130000;
+											if (typeof e.adRequestTimer === "undefined" || !e.adRequestTimer) {
+    e.adRequestTimer = new Date(0); // считаем, что рекламы давно не было
+}
                                             t.advertisements ? void 0 !== e.adRequestTimer ? (new Date).valueOf() - e.adRequestTimer.valueOf() < midrolltimer ? ((0, u.dankLog)("SDK_SHOW_BANNER", "The advertisement was requested too soon after the previous advertisement was finished.", "warning"), e.onResumeGame("Just resume the game...", "success")) : ((0, u.dankLog)("SDK_SHOW_BANNER", "Requested the midroll advertisement.", "success"), e.adRequestTimer = new Date, e.videoAdInstance.requestAttempts = 0, e.videoAdInstance.requestAd().then(function(t) {
                                                 return e.videoAdInstance.loadAd(t)
                                             }).catch(function(t) {
