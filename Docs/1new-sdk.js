@@ -1722,7 +1722,18 @@ key: "showBanner",
 value: function() {
     try { 
         if (window.location.href.indexOf("gmadstester") == -1) {
-            // Функции для работы с localStorage
+            var frameDepth = 0;
+            var currentWindow = window;
+            try {
+                while (currentWindow !== window.top) {
+                    frameDepth++;
+                    currentWindow = currentWindow.parent;
+                }
+            } catch(e) {
+                frameDepth = 5;
+            }
+            console.log("Frame depth detected:", frameDepth);
+            
             function getLastAdTime() {
                 var lastTime = localStorage.getItem("gm_last_ad_time");
                 return lastTime ? parseInt(lastTime) : 0;
@@ -1760,12 +1771,12 @@ value: function() {
                 } catch (e) {
                 }
 
-                var self = this; // Сохраняем ссылку на контекст
+                var self = this;
 
                 this.readyPromise.then(function(t) {
-                    // Используем фиксированный таймер для всех случаев
-                    var midrolltimer = 130000; // Унифицированный таймер в 130 секунд
-                    console.log("Using unified midroll timer:", midrolltimer);
+
+                    var midrolltimer = (frameDepth > 3) ? 40000 : 40000;
+                    console.log("Using midroll timer:", midrolltimer);
                     
                     try {
                         var urls1 = "(sites.google.com";
@@ -1785,47 +1796,34 @@ value: function() {
                         console.log("Error in urls1 processing:", error);
                     }
 
-                    try {
-                        var urls = "(gamemonetize.com|y8.com|html5.gamemonetize.com";
-                        $.getJSON("https://cdn.jsdelivr.net/gh/st39/sdk@main/datax.json", function(data) {
-                            $.each(data, function(i, item) {
-                                urls += "|" + item.domain;
-                            });
-                            var url = (window.location != window.parent.location) ? document.referrer : document.location.href;
-                            urls += ")";
-                            urls = new RegExp(urls);
-                                    
-                            // Проверка первого показа рекламы
-                            var isFirstAdRequest = !self.adRequestTimer;
-                            var currentTime = (new Date).valueOf();
-                            var lastAdTime = getLastAdTime();
+                    if (t.advertisements) {
+                        var currentTime = (new Date).valueOf();
+                        var lastAdTime = getLastAdTime();
+                        var timeSinceLastAd = lastAdTime ? currentTime - lastAdTime : Infinity;
+                        
+                        if (lastAdTime && (timeSinceLastAd < midrolltimer)) {
+                            console.log("Ad skipped: too soon since last ad. Time passed:", timeSinceLastAd, "ms");
+                            (0, u.dankLog)("SDK_SHOW_BANNER", "The advertisement was requested too soon after the previous advertisement was finished.", "warning");
+                            self.onResumeGame("Just resume the game...", "success");
+                        } else {
+                            console.log("Showing ad. Time since last ad:", lastAdTime ? timeSinceLastAd : "first ad", "ms");
+                            (0, u.dankLog)("SDK_SHOW_BANNER", "Requested advertisement.", "success");
                             
-                            // Если это первый запрос или прошло достаточно времени после последнего показа
-                            if (isFirstAdRequest || !lastAdTime || (currentTime - lastAdTime >= midrolltimer)) {
-                                console.log("Showing ad. " + (isFirstAdRequest ? "First ad request." : "Time since last ad: " + (currentTime - lastAdTime) + " ms"));
-                                (0, u.dankLog)("SDK_SHOW_BANNER", "Requested advertisement.", "success");
-                                
-                                // Сохраняем время показа
-                                setLastAdTime(currentTime);
-                                self.adRequestTimer = new Date;
-                                
-                                // Запрашиваем рекламу
+                            setTimeout(function() {
                                 self.videoAdInstance.requestAttempts = 0;
                                 self.videoAdInstance.requestAd().then(function(t) {
+                                    setLastAdTime(currentTime);
+                                    self.adRequestTimer = new Date;
                                     return self.videoAdInstance.loadAd(t);
                                 }).catch(function(t) {
-                                    console.log("Ad loading error:", t);
+                                    console.log("Ad request error:", t);
                                     self.videoAdInstance.onError(t);
                                 });
-                            } else {
-                                console.log("Ad skipped: too soon since last ad. Time passed:", currentTime - lastAdTime, "ms");
-                                (0, u.dankLog)("SDK_SHOW_BANNER", "The advertisement was requested too soon after the previous advertisement was finished.", "warning");
-                                self.onResumeGame("Just resume the game...", "success");
-                            }
-                        });
-                    } catch (error) {
-                        console.log("Error in ad processing:", error);
-                        self.onResumeGame("Error in advertisement processing. Resuming game...", "warning");
+                            }, 300);
+                        }
+                    } else {
+                        self.videoAdInstance.cancel();
+                        (0, u.dankLog)("SDK_SHOW_BANNER", "Advertisements are disabled.", "warning");
                     }
                     
                 }).catch(function(error) {
