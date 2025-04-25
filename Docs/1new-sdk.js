@@ -1722,22 +1722,7 @@ key: "showBanner",
 value: function() {
     try { 
         if (window.location.href.indexOf("gmadstester") == -1) {
-            // Определяем вложенность iframe
-            var frameDepth = 0;
-            var currentWindow = window;
-            try {
-                while (currentWindow !== window.top) {
-                    frameDepth++;
-                    currentWindow = currentWindow.parent;
-                }
-            } catch(e) {
-                // Если не можем определить из-за cross-origin ограничений,
-                // предполагаем глубокую вложенность
-                frameDepth = 5;
-            }
-            console.log("Frame depth detected:", frameDepth);
-            
-            // Функции для работы с localStorage
+            // Единый механизм хранения времени показа рекламы
             function getLastAdTime() {
                 var lastTime = localStorage.getItem("gm_last_ad_time");
                 return lastTime ? parseInt(lastTime) : 0;
@@ -1778,9 +1763,8 @@ value: function() {
                 var self = this; // Сохраняем ссылку на контекст
 
                 this.readyPromise.then(function(t) {
-                    // Устанавливаем таймер в зависимости от вложенности
-                    var midrolltimer = (frameDepth > 3) ? 130000 : 30000;
-                    console.log("Using midroll timer:", midrolltimer);
+                    // Фиксированный таймер для всех случаев - 130000 мс (~2 минуты)
+                    var midrolltimer = 130000;
                     
                     try {
                         var urls1 = "(sites.google.com";
@@ -1800,33 +1784,32 @@ value: function() {
                         console.log("Error in urls1 processing:", error);
                     }
 
-                    // Проверяем, нужно ли загружать рекламу
+                    // Единая логика для всех доменов
                     if (t.advertisements) {
                         var currentTime = (new Date).valueOf();
                         var lastAdTime = getLastAdTime();
-                        var timeSinceLastAd = lastAdTime ? currentTime - lastAdTime : Infinity;
                         
-                        if (lastAdTime && (timeSinceLastAd < midrolltimer)) {
-                            console.log("Ad skipped: too soon since last ad. Time passed:", timeSinceLastAd, "ms");
+                        // Логика блокировки частых показов рекламы
+                        if (lastAdTime && (currentTime - lastAdTime < midrolltimer)) {
+                            console.log("Ad skipped: too soon since last ad. Time passed:", currentTime - lastAdTime, "ms of", midrolltimer, "ms required");
                             (0, u.dankLog)("SDK_SHOW_BANNER", "The advertisement was requested too soon after the previous advertisement was finished.", "warning");
                             self.onResumeGame("Just resume the game...", "success");
                         } else {
-                            console.log("Showing ad. Time since last ad:", lastAdTime ? timeSinceLastAd : "first ad", "ms");
+                            console.log("Showing ad. Time since last ad:", lastAdTime ? currentTime - lastAdTime : "first ad", "ms");
                             (0, u.dankLog)("SDK_SHOW_BANNER", "Requested advertisement.", "success");
                             
-                            // Добавляем небольшую задержку для корректной инициализации рекламы в iframe
-                            setTimeout(function() {
-                                // Сохраняем время показа в localStorage только ПОСЛЕ успешной загрузки рекламы
-                                self.videoAdInstance.requestAttempts = 0;
-                                self.videoAdInstance.requestAd().then(function(t) {
-                                    setLastAdTime(currentTime);
-                                    self.adRequestTimer = new Date;
-                                    return self.videoAdInstance.loadAd(t);
-                                }).catch(function(t) {
-                                    console.log("Ad request error:", t);
-                                    self.videoAdInstance.onError(t);
-                                });
-                            }, 300);
+                            // Сохраняем время показа в localStorage И в оригинальный таймер для совместимости
+                            setLastAdTime(currentTime);
+                            self.adRequestTimer = new Date;
+                            
+                            // Стандартный запрос рекламы
+                            self.videoAdInstance.requestAttempts = 0;
+                            self.videoAdInstance.requestAd().then(function(t) {
+                                return self.videoAdInstance.loadAd(t);
+                            }).catch(function(t) {
+                                console.log("Ad loading error:", t);
+                                self.videoAdInstance.onError(t);
+                            });
                         }
                     } else {
                         self.videoAdInstance.cancel();
