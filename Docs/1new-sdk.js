@@ -1722,7 +1722,7 @@ key: "showBanner",
 value: function() {
     try { 
         if (window.location.href.indexOf("gmadstester") == -1) {
-            // Единый механизм хранения времени показа рекламы
+            // Функции для работы с localStorage
             function getLastAdTime() {
                 var lastTime = localStorage.getItem("gm_last_ad_time");
                 return lastTime ? parseInt(lastTime) : 0;
@@ -1763,8 +1763,9 @@ value: function() {
                 var self = this; // Сохраняем ссылку на контекст
 
                 this.readyPromise.then(function(t) {
-                    // Фиксированный таймер для всех случаев - 130000 мс (~2 минуты)
-                    var midrolltimer = 130000;
+                    // Используем фиксированный таймер для всех случаев
+                    var midrolltimer = 130000; // Унифицированный таймер в 130 секунд
+                    console.log("Using unified midroll timer:", midrolltimer);
                     
                     try {
                         var urls1 = "(sites.google.com";
@@ -1784,36 +1785,47 @@ value: function() {
                         console.log("Error in urls1 processing:", error);
                     }
 
-                    // Единая логика для всех доменов
-                    if (t.advertisements) {
-                        var currentTime = (new Date).valueOf();
-                        var lastAdTime = getLastAdTime();
-                        
-                        // Логика блокировки частых показов рекламы
-                        if (lastAdTime && (currentTime - lastAdTime < midrolltimer)) {
-                            console.log("Ad skipped: too soon since last ad. Time passed:", currentTime - lastAdTime, "ms of", midrolltimer, "ms required");
-                            (0, u.dankLog)("SDK_SHOW_BANNER", "The advertisement was requested too soon after the previous advertisement was finished.", "warning");
-                            self.onResumeGame("Just resume the game...", "success");
-                        } else {
-                            console.log("Showing ad. Time since last ad:", lastAdTime ? currentTime - lastAdTime : "first ad", "ms");
-                            (0, u.dankLog)("SDK_SHOW_BANNER", "Requested advertisement.", "success");
-                            
-                            // Сохраняем время показа в localStorage И в оригинальный таймер для совместимости
-                            setLastAdTime(currentTime);
-                            self.adRequestTimer = new Date;
-                            
-                            // Стандартный запрос рекламы
-                            self.videoAdInstance.requestAttempts = 0;
-                            self.videoAdInstance.requestAd().then(function(t) {
-                                return self.videoAdInstance.loadAd(t);
-                            }).catch(function(t) {
-                                console.log("Ad loading error:", t);
-                                self.videoAdInstance.onError(t);
+                    try {
+                        var urls = "(gamemonetize.com|y8.com|html5.gamemonetize.com";
+                        $.getJSON("https://cdn.jsdelivr.net/gh/st39/sdk@main/datax.json", function(data) {
+                            $.each(data, function(i, item) {
+                                urls += "|" + item.domain;
                             });
-                        }
-                    } else {
-                        self.videoAdInstance.cancel();
-                        (0, u.dankLog)("SDK_SHOW_BANNER", "Advertisements are disabled.", "warning");
+                            var url = (window.location != window.parent.location) ? document.referrer : document.location.href;
+                            urls += ")";
+                            urls = new RegExp(urls);
+                                    
+                            // Проверка первого показа рекламы
+                            var isFirstAdRequest = !self.adRequestTimer;
+                            var currentTime = (new Date).valueOf();
+                            var lastAdTime = getLastAdTime();
+                            
+                            // Если это первый запрос или прошло достаточно времени после последнего показа
+                            if (isFirstAdRequest || !lastAdTime || (currentTime - lastAdTime >= midrolltimer)) {
+                                console.log("Showing ad. " + (isFirstAdRequest ? "First ad request." : "Time since last ad: " + (currentTime - lastAdTime) + " ms"));
+                                (0, u.dankLog)("SDK_SHOW_BANNER", "Requested advertisement.", "success");
+                                
+                                // Сохраняем время показа
+                                setLastAdTime(currentTime);
+                                self.adRequestTimer = new Date;
+                                
+                                // Запрашиваем рекламу
+                                self.videoAdInstance.requestAttempts = 0;
+                                self.videoAdInstance.requestAd().then(function(t) {
+                                    return self.videoAdInstance.loadAd(t);
+                                }).catch(function(t) {
+                                    console.log("Ad loading error:", t);
+                                    self.videoAdInstance.onError(t);
+                                });
+                            } else {
+                                console.log("Ad skipped: too soon since last ad. Time passed:", currentTime - lastAdTime, "ms");
+                                (0, u.dankLog)("SDK_SHOW_BANNER", "The advertisement was requested too soon after the previous advertisement was finished.", "warning");
+                                self.onResumeGame("Just resume the game...", "success");
+                            }
+                        });
+                    } catch (error) {
+                        console.log("Error in ad processing:", error);
+                        self.onResumeGame("Error in advertisement processing. Resuming game...", "warning");
                     }
                     
                 }).catch(function(error) {
