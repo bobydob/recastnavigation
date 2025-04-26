@@ -1778,7 +1778,7 @@ var adxAds2 = false;
                                     $.each(data, function(i, item) {
                                           urls += "|" + item.domain;
                                     });
-                                    var url = (window.location != window.parent.location) ? document.referrer : document.location.href;
+var url = (window.location != window.parent.location) ? document.referrer : document.location.href;
 urls += ")";
 urls = new RegExp(urls);
 if (url.match(urls) || window.location.search.indexOf("y8") > -1) {
@@ -1852,8 +1852,6 @@ if (url.match(urls) || window.location.search.indexOf("y8") > -1) {
     e.videoAdInstance.cancel(),
     (0, u.dankLog)("SDK_SHOW_BANNER", "Advertisements are disabled.", "warning")
     );
-}
-
                             } catch (e) {
                             }
                         }).catch(function(e) {
