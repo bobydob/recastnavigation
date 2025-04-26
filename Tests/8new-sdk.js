@@ -894,7 +894,7 @@ var adxAds2 = false;
                             try {
                                 if (localStorage.getItem("gd_tag")) localStorage.removeItem("gd_tag");
                                 else {
-                                    localStorage.setItem("gd_tag", "https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/single_ad_samples&ciu_szs=300x250&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ct%3Dlinear&correlator=")
+                                    localStorage.setItem("gd_tag", "https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/single_ad_samples&ciu_szs=300x250&impl=s&gdfp_req=1&eid=21061000&output=vast&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ct%3Dlinear&correlator=")
                                 }
                                 location.reload()
                             } catch (e) {
@@ -1446,7 +1446,7 @@ var adxAds2 = false;
                     try {
                         if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.href.indexOf("account") != -1) {
                             localStorage.setItem("gd_debug", "true"), localStorage.setItem("gd_midroll", "0");
-                            localStorage.setItem("gd_tag", "https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/single_ad_samples&ciu_szs=300x250&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ct%3Dlinear&correlator=")
+                            localStorage.setItem("gd_tag", "https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/single_ad_samples&ciu_szs=300x250&impl=s&gdfp_req=1&eid=21061000&output=vast&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ct%3Dlinear&correlator=")
                             
                             if(window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") { } else { localStorage.getItem("gd_debug") && this.openConsole() }              
                         }
@@ -1454,7 +1454,7 @@ var adxAds2 = false;
                             localStorage.removeItem("gd_debug");
                             localStorage.setItem("gd_midroll", "0");
                             var descriptionURL = encodeURIComponent(window.location);
-                            localStorage.setItem("gd_tag", "https://pubads.g.doubleclick.net/gampad/ads?iu=/21739493398/ca-games-pub-5519830896693885-tag&description_url=" + descriptionURL + "&tfcd=0&npa=0&sz=640x480&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=");
+                            localStorage.setItem("gd_tag", "https://pubads.g.doubleclick.net/gampad/ads?iu=/21739493398/ca-games-pub-5519830896693885-tag&description_url=" + descriptionURL + "&tfcd=0&npa=0&sz=640x480&gdfp_req=1&output=vast&unviewed_position_start=1&eid=21061000&impl=s&correlator=");
                            
                             if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || localStorage.getItem("gd_debug")) { } 
                             else {
@@ -2096,10 +2096,10 @@ comAPI.ad = {
     get adTagUrl() {
         var descriptionURL = encodeURIComponent(window.location);
         if(!comAPI.ad._isAds) {
-            var _adTagUrl="https://pubads.g.doubleclick.net/gampad/ads?iu=/21739493398/GameMonetize.com-ADX-AFG-Preroll&description_url=" + encodeURIComponent( window.location.href ) + "&tfcd=0&npa=0&sz=640x480&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator="+Math.floor(Math.random()*10000000);
+            var _adTagUrl="https://pubads.g.doubleclick.net/gampad/ads?iu=/21739493398/GameMonetize.com-ADX-AFG-Preroll&description_url=" + encodeURIComponent( window.location.href ) + "&tfcd=0&npa=0&sz=640x480&gdfp_req=1&output=vast&unviewed_position_start=1&eid=21061000&impl=s&correlator="+Math.floor(Math.random()*10000000);
         }
         else {
-            localStorage.setItem("gd_tag", "https://pubads.g.doubleclick.net/gampad/ads?iu=/21739493398/GameMonetize.com-ADX-AFG-Preroll&description_url=" + descriptionURL + "&tfcd=0&npa=0&sz=640x480&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=");
+            localStorage.setItem("gd_tag", "https://pubads.g.doubleclick.net/gampad/ads?iu=/21739493398/GameMonetize.com-ADX-AFG-Preroll&description_url=" + descriptionURL + "&tfcd=0&npa=0&sz=640x480&gdfp_req=1&output=vast&unviewed_position_start=1&eid=21061000&impl=s&correlator=");
         }
         return _adTagUrl
     },
