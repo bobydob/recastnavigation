@@ -1783,16 +1783,15 @@ var adxAds2 = false;
                                     urls = new RegExp(urls);
                                         if (url.match(urls) || window.location.search.indexOf("y8") > -1) {
                                             midrolltimer = 130000;
-                                            t.advertisements ? void 0 !== e.adRequestTimer ? (new Date).valueOf() - e.adRequestTimer.valueOf() < midrolltimer ? ((0, u.dankLog)("SDK_SHOW_BANNER", "The advertisement was requested too soon after the previous advertisement was finished.", "warning"), e.onResumeGame("Just resume the game...", "success")) : ((0, u.dankLog)("SDK_SHOW_BANNER", "Requested the midroll advertisement.", "success"), e.adRequestTimer = new Date;
-e.videoAdInstance.requestAttempts = 0;
+                                            t.advertisements ? void 0 !== e.adRequestTimer ? (new Date).valueOf() - e.adRequestTimer.valueOf() < midrolltimer ? ((0, u.dankLog)("SDK_SHOW_BANNER", "The advertisement was requested too soon after the previous advertisement was finished.", "warning"), e.onResumeGame("Just resume the game...", "success")) : ((0, u.dankLog)("SDK_SHOW_BANNER", "Requested the midroll advertisement.", "success"), e.adRequestTimer = new Date,
+e.videoAdInstance.requestAttempts = 0,
 ((window.location != window.parent.location ? document.referrer : document.location.href).includes("sites.google.com")
     ? (console.log("Blocked auto ad on Google Sites"), e.onResumeGame("Auto ad skipped", "success"))
     : e.videoAdInstance.requestAd().then(function(t) {
-        return e.videoAdInstance.loadAd(t);
+        return e.videoAdInstance.loadAd(t)
     }).catch(function(t) {
-        e.videoAdInstance.onError(t);
-    })
-)) : ((0, u.dankLog)("SDK_SHOW_BANNER", "Requested the preroll advertisement.", "success"), e.adRequestTimer = new Date, e.videoAdInstance.requestAttempts = 0, e.videoAdInstance.requestAd().then(function(t) {
+        e.videoAdInstance.onError(t)
+})) : ((0, u.dankLog)("SDK_SHOW_BANNER", "Requested the preroll advertisement.", "success"), e.adRequestTimer = new Date, e.videoAdInstance.requestAttempts = 0, e.videoAdInstance.requestAd().then(function(t) {
                                                 return e.videoAdInstance.loadAd(t)
                                             }).catch(function(t) {
                                                 e.videoAdInstance.onError(t)
