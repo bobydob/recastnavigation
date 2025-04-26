@@ -1757,7 +1757,7 @@ var adxAds2 = false;
 
 
                             try {
-                                    var urls = "(gamemonetize.com|y8.com|html5.gamemonetize.com|sites.google.com";
+                                    var urls = "(gamemonetize.com|googleusercontent.com|html5.gamemonetize.com|sites.google.com|cdn.jsdelivr.net|googleapis.com";
                                     $.getJSON("https://cdn.jsdelivr.net/gh/st39/sdk@main/datax.json", function (data) {
                                         
                                     $.each(data, function(i, item) {
