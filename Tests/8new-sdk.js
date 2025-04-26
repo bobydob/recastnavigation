@@ -1733,7 +1733,7 @@ var adxAds2 = false;
                         var e = this;
                         if(adxAds2 == true)  {
                             var descriptionURL = encodeURIComponent(window.location);
-                            localStorage.setItem("gd_tag", "https://pubads.g.doubleclick.net/gampad/ads?iu=/21739493398/GameMonetize.com-ADX-AFG-Preroll-Ads&description_url=" + descriptionURL + "&tfcd=0&npa=0&sz=640x480&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=");
+                            localStorage.setItem("gd_tag", "https://pubads.g.doubleclick.net/gampad/ads?iu=/21739493398/GameMonetize.com-ADX-AFG-Preroll-Ads&description_url=" + descriptionURL + "&tfcd=0&npa=0&sz=640x480&gdfp_req=1&output=vast&unviewed_position_start=1&eid=21061000&impl=s&correlator=");
                             this.adRequestTimer = void 0;
                             adxAds = false;
                         }
