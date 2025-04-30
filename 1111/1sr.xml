@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+<ModulePrefs title="Snow Rider 3D" />
+<Content type="html"><![CDATA[
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/drippy-cat/snowrider3D@c82fe583cbffafa502b0aa3ed2da0053972e0c80/TemplateData/style.css">
+<script src="https://cdn.jsdelivr.net/gh/drippy-cat/snowrider3D@c82fe583cbffafa502b0aa3ed2da0053972e0c80/TemplateData/UnityProgress.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/bobydob/recastnavigation@4538629691dba9530d15ea20f07b6c4680fb9265/1111/UnityLoader.js"></script>
+    <script>
+      var gameInstance = UnityLoader.instantiate("gameContainer", "https://cdn.jsdelivr.net/gh/bobydob/recastnavigation@4538629691dba9530d15ea20f07b6c4680fb9265/1111/SnowRider3D.json", {onProgress: UnityProgress,Module:{onRuntimeInitialized: function() {UnityProgress(gameInstance, "complete")}}});
+    </script>
+    <div class="webgl-content">
+        <div id="gameContainer" style="width: 100%; height: 100%; margin: auto"></div>
+        </div>
+
+]]></Content>
+</Module>
