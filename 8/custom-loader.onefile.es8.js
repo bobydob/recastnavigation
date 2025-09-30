@@ -134,6 +134,15 @@ var prog = chainProgress(preCap, function(p){
 		
 log(TAG,'assets ready → loading inner loader:', innerLoaderUrl);
 
+// ✱✱✱ ДОБАВЛЕНО: собираем cfg один раз (как было до правки)
+var cfg = {};
+for (var k in rest) { if (rest.hasOwnProperty(k)) cfg[k] = rest[k]; }
+cfg.frameworkUrl        = frameworkUrl;
+cfg.codeUrl             = wasmUrl;   // разжатый WASM (blob:)
+cfg.dataUrl             = dataUrl2;  // разжатый DATA (blob:)
+cfg.streamingAssetsUrl  = streamingAssetsUrl;
+
+// ✱✱✱ оставляем проверку на уже загруженный loader.js
 function ensureInnerLoader(){
   if (typeof window.createUnityInstance === 'function') {
     return Promise.resolve();
@@ -143,19 +152,19 @@ function ensureInnerLoader(){
 }
 
 return ensureInnerLoader().then(function(){
-  if (typeof window.createUnityInstance!=='function')
+  if (typeof window.createUnityInstance !== 'function')
     throw new Error('inner loader did not define createUnityInstance');
 
-  // ...
-  return window.createUnityInstance(canvas, cfg, function(p){ /* прогресс */ });
-        }).then(function(unity){
-          var i=0; function step(){ i++; prog.tail(1); if(i<3) return sleep(16).then(step); }
-          return Promise.resolve(step()).then(function(){ log(TAG,'Unity instance started'); return unity; });
-        });
-      });
-    })().catch(function(e){ err(e && e.stack ? e.stack : String(e)); throw e; });
-  }
+  // запускаем Unity с уже собранным cfg
+  return window.createUnityInstance(canvas, cfg, function(p){
+    prog.tail(p < 0 ? 0 : (p > 1 ? 1 : p)); // как раньше
+  });
 
-  window.startUnityBr = startUnityBr;
-  log('exported startUnityBr:', typeof window.startUnityBr);
-})();
+}).then(function(unity){
+  var i = 0; 
+  function step(){ i++; prog.tail(1); if (i < 3) return sleep(16).then(step); }
+  return Promise.resolve(step()).then(function(){ 
+    log(TAG,'Unity instance started'); 
+    return unity; 
+  });
+});
