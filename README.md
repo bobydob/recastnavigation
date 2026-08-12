@@ -5,8 +5,6 @@ Recast & Detour
 [![Build](https://github.com/recastnavigation/recastnavigation/actions/workflows/Build.yaml/badge.svg)](https://github.com/recastnavigation/recastnavigation/actions/workflows/Build.yaml)
 [![Tests](https://github.com/recastnavigation/recastnavigation/actions/workflows/Tests.yaml/badge.svg)](https://github.com/recastnavigation/recastnavigation/actions/workflows/Tests.yaml)
 
-![screenshot of a navmesh baked with the sample program](/Docs/Images/screenshot.png)
-
 ## Recast
 
 Recast is state of the art navigation mesh construction toolset for games.
